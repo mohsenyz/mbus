@@ -1,0 +1,186 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project name="mbus" default="all">
+  
+  
+  <property file="mbus.properties"/>
+  <!-- Uncomment the following property if no tests compilation is needed -->
+  <!-- 
+  <property name="skip.tests" value="true"/>
+   -->
+  
+  <!-- Compiler options -->
+  
+  <property name="compiler.debug" value="on"/>
+  <property name="compiler.generate.no.warnings" value="off"/>
+  <property name="compiler.args" value=""/>
+  <property name="compiler.max.memory" value="700m"/>
+  <patternset id="ignored.files">
+    <exclude name="**/*.hprof/**"/>
+    <exclude name="**/*.pyc/**"/>
+    <exclude name="**/*.pyo/**"/>
+    <exclude name="**/*.rbc/**"/>
+    <exclude name="**/*.yarb/**"/>
+    <exclude name="**/*~/**"/>
+    <exclude name="**/.DS_Store/**"/>
+    <exclude name="**/.git/**"/>
+    <exclude name="**/.hg/**"/>
+    <exclude name="**/.svn/**"/>
+    <exclude name="**/CVS/**"/>
+    <exclude name="**/__pycache__/**"/>
+    <exclude name="**/_svn/**"/>
+    <exclude name="**/vssver.scc/**"/>
+    <exclude name="**/vssver2.scc/**"/>
+  </patternset>
+  <patternset id="library.patterns">
+    <include name="*.war"/>
+    <include name="*.swc"/>
+    <include name="*.zip"/>
+    <include name="*.egg"/>
+    <include name="*.ane"/>
+    <include name="*.jar"/>
+    <include name="*.ear"/>
+  </patternset>
+  <patternset id="compiler.resources">
+    <exclude name="**/?*.java"/>
+    <exclude name="**/?*.form"/>
+    <exclude name="**/?*.class"/>
+    <exclude name="**/?*.groovy"/>
+    <exclude name="**/?*.scala"/>
+    <exclude name="**/?*.flex"/>
+    <exclude name="**/?*.kt"/>
+    <exclude name="**/?*.clj"/>
+    <exclude name="**/?*.aj"/>
+  </patternset>
+  
+  <!-- JDK definitions -->
+  
+  <property name="jdk.bin.1.7" value="${jdk.home.1.7}/bin"/>
+  <path id="jdk.classpath.1.7">
+    <fileset dir="${jdk.home.1.7}">
+      <include name="../java-1.7.0-openjdk-amd64/jre/lib/charsets.jar"/>
+      <include name="../java-1.7.0-openjdk-amd64/jre/lib/compilefontconfig.jar"/>
+      <include name="../java-1.7.0-openjdk-amd64/jre/lib/ext/dnsns.jar"/>
+      <include name="../java-1.7.0-openjdk-amd64/jre/lib/ext/icedtea-sound.jar"/>
+      <include name="../java-1.7.0-openjdk-amd64/jre/lib/ext/java-atk-wrapper.jar"/>
+      <include name="../java-1.7.0-openjdk-amd64/jre/lib/ext/localedata.jar"/>
+      <include name="../java-1.7.0-openjdk-amd64/jre/lib/ext/sunjce_provider.jar"/>
+      <include name="../java-1.7.0-openjdk-amd64/jre/lib/ext/sunpkcs11.jar"/>
+      <include name="../java-1.7.0-openjdk-amd64/jre/lib/ext/zipfs.jar"/>
+      <include name="../java-1.7.0-openjdk-amd64/jre/lib/javazic.jar"/>
+      <include name="../java-1.7.0-openjdk-amd64/jre/lib/jce.jar"/>
+      <include name="../java-1.7.0-openjdk-amd64/jre/lib/jsse.jar"/>
+      <include name="../java-1.7.0-openjdk-amd64/jre/lib/management-agent.jar"/>
+      <include name="../java-1.7.0-openjdk-amd64/jre/lib/resources.jar"/>
+      <include name="../java-1.7.0-openjdk-amd64/jre/lib/rhino.jar"/>
+      <include name="../java-1.7.0-openjdk-amd64/jre/lib/rt.jar"/>
+    </fileset>
+  </path>
+  
+  <property name="project.jdk.home" value="${jdk.home.1.7}"/>
+  <property name="project.jdk.bin" value="${jdk.bin.1.7}"/>
+  <property name="project.jdk.classpath" value="jdk.classpath.1.7"/>
+  <!-- Register Custom Compiler Taskdefs -->
+  <property name="javac2.home" value="${idea.home}/lib"/>
+  <path id="javac2.classpath">
+    <pathelement location="${javac2.home}/javac2.jar"/>
+    <pathelement location="${javac2.home}/jdom.jar"/>
+    <pathelement location="${javac2.home}/asm-all.jar"/>
+    <pathelement location="${javac2.home}/jgoodies-forms.jar"/>
+  </path>
+  <target name="register.custom.compilers">
+    <taskdef name="javac2" classname="com.intellij.ant.Javac2" classpathref="javac2.classpath"/>
+    <taskdef name="instrumentIdeaExtensions" classname="com.intellij.ant.InstrumentIdeaExtensions" classpathref="javac2.classpath"/>
+  </target>
+  
+  <!-- Modules -->
+  
+  
+  <!-- Module MBus -->
+  
+  <dirname property="module.mbus.basedir" file="${ant.file}"/>
+  
+  
+  <property name="module.jdk.home.mbus" value="${project.jdk.home}"/>
+  <property name="module.jdk.bin.mbus" value="${project.jdk.bin}"/>
+  <property name="module.jdk.classpath.mbus" value="${project.jdk.classpath}"/>
+  
+  <property name="compiler.args.mbus" value="-encoding UTF-8 -source 1.7 -target 1.7 ${compiler.args}"/>
+  
+  <property name="mbus.output.dir" value="${module.mbus.basedir}/out/production/MBus"/>
+  <property name="mbus.testoutput.dir" value="${module.mbus.basedir}/out/test/MBus"/>
+  
+  <path id="mbus.module.bootclasspath">
+    <!-- Paths to be included in compilation bootclasspath -->
+  </path>
+  
+  <path id="mbus.module.production.classpath">
+    <path refid="${module.jdk.classpath.mbus}"/>
+  </path>
+  
+  <path id="mbus.runtime.production.module.classpath">
+    <pathelement location="${mbus.output.dir}"/>
+  </path>
+  
+  <path id="mbus.module.classpath">
+    <path refid="${module.jdk.classpath.mbus}"/>
+    <pathelement location="${mbus.output.dir}"/>
+  </path>
+  
+  <path id="mbus.runtime.module.classpath">
+    <pathelement location="${mbus.testoutput.dir}"/>
+    <pathelement location="${mbus.output.dir}"/>
+  </path>
+  
+  
+  <patternset id="excluded.from.module.mbus">
+    <patternset refid="ignored.files"/>
+  </patternset>
+  
+  <patternset id="excluded.from.compilation.mbus">
+    <patternset refid="excluded.from.module.mbus"/>
+  </patternset>
+  
+  <path id="mbus.module.sourcepath">
+    <dirset dir="${module.mbus.basedir}">
+      <include name="src"/>
+    </dirset>
+  </path>
+  
+  
+  <target name="compile.module.mbus" depends="compile.module.mbus.production,compile.module.mbus.tests" description="Compile module MBus"/>
+  
+  <target name="compile.module.mbus.production" depends="register.custom.compilers" description="Compile module MBus; production classes">
+    <mkdir dir="${mbus.output.dir}"/>
+    <javac2 destdir="${mbus.output.dir}" debug="${compiler.debug}" nowarn="${compiler.generate.no.warnings}" memorymaximumsize="${compiler.max.memory}" fork="true" executable="${module.jdk.bin.mbus}/javac">
+      <compilerarg line="${compiler.args.mbus}"/>
+      <bootclasspath refid="mbus.module.bootclasspath"/>
+      <classpath refid="mbus.module.production.classpath"/>
+      <src refid="mbus.module.sourcepath"/>
+      <patternset refid="excluded.from.compilation.mbus"/>
+    </javac2>
+    
+    <copy todir="${mbus.output.dir}">
+      <fileset dir="${module.mbus.basedir}/src">
+        <patternset refid="compiler.resources"/>
+        <type type="file"/>
+      </fileset>
+    </copy>
+  </target>
+  
+  <target name="compile.module.mbus.tests" depends="register.custom.compilers,compile.module.mbus.production" description="compile module MBus; test classes" unless="skip.tests"/>
+  
+  <target name="clean.module.mbus" description="cleanup module">
+    <delete dir="${mbus.output.dir}"/>
+    <delete dir="${mbus.testoutput.dir}"/>
+  </target>
+  
+  <target name="init" description="Build initialization">
+    <!-- Perform any build initialization in this target -->
+  </target>
+  
+  <target name="clean" depends="clean.module.mbus" description="cleanup all"/>
+  
+  <target name="build.modules" depends="init, clean, compile.module.mbus" description="build all modules"/>
+  
+  <target name="all" depends="build.modules" description="build all"/>
+</project>
